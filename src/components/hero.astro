@@ -4,167 +4,537 @@ import Cobe from "@components/cobe.astro";
 import Link from "@components/ui/link.astro";
 import abstractDottedGlobeIllustration from "assets/abstract-dotted-globe-illustration.png";
 import { t } from "i18next";
-import InputScreen from "./InputScreen";
+import CSS from "@public/index.css";
 
 const { dynamic = false } = Astro.props;
 ---
 
-<div class="relative isolate pt-14 dark:bg-stone-950">
+<div class="relative isolate px-6 pt-10 lg:px-8 pb-28 bg-orange-500">
   <div
-  class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+    class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+    aria-hidden="true"
   >
-  <svg
-  class="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem] animate-slide"
-  viewBox="0 0 1155 678"
-  >
-  <path
-  fill="url(#9b2541ea-d39d-499b-bd42-aeea3e93f5ff)"
-  fill-opacity=".3"
-  d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
-  >
-</path>
-<defs>
-  <linearGradient
-  id="9b2541ea-d39d-499b-bd42-aeea3e93f5ff"
-  x1="1155.49"
-  x2="-78.208"
-  y1=".177"
-  y2="474.645"
-  gradientUnits="userSpaceOnUse"
-  >
-  <stop stop-color="#9089FC"></stop>
-  <stop offset="1" stop-color="#FFD580"></stop>
-</linearGradient>
-</defs>
-</svg>
-</div>
+  </div>
+  <div class="mx-auto max-w-screen-xl another">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold tracking-tight text-white">{heading}</h1>
+      <p class="my-2 text-lg leading-8 text-gray-200">{subheading}</p>
+    </div>
 
-<div class="sm:pt-10">
-  <div class="mx-auto max-w-7xl">
-    <div class="mx-auto max-w-2xl text-center">
-      <h1
-      class="text-4xl font-bold tracking-tight text-black dark:text-white sm:text-6xl"
-      >
-      {t("hero.title")}
-    </h1>
-    <p class="mt-2 text-lg leading-8 text-gray-900 dark:text-gray-100">
-      {t("hero.subtitle")}
-    </p>
-    <InputScreen client:only="solid-js" />
-        <div class="mt-10 flex items-center justify-center gap-x-2 md:gap-x-6">
-          <Link href="https://github.com/zankhq/astros"
-            >{t("hero.main_button_text")}</Link
+    <div class="pageTunerWrapper">
+      <div class="pageTunerWrapper__items">
+        <div class="pageTunerWrapper__item">
+          <a href="/" data-gtag-click="top_panel_video_click"
+            ><img
+              src="/images/tiktok-video.svg"
+              alt="Video"
+              width="24"
+              height="24"
+              loading="lazy"
+            /><span class="md:block hidden">Video</span></a
           >
-          {
-            dynamic ? (
-              <Link href="/" style="muted">
-                {t("hero_animated.secondary_button_text")}
-                <span
-                  aria-hidden="true"
-                  class="pl-1 text-black dark:text-white"
-                >
-                  →
-                </span>
-              </Link>
-            ) : (
-              <Link href="/animated" style="muted">
-                {t("hero.secondary_button_text")}
-                <span
-                  aria-hidden="true"
-                  class="pl-1 text-black dark:text-white"
-                >
-                  →
-                </span>
-              </Link>
-            )
-          }
+        </div>
+        <div class="pageTunerWrapper__item">
+          <a
+            href="/tiktok-slideshow-downloader"
+            data-gtag-click="top_panel_photo_click"
+            ><img
+              src="/images/tiktok-photo.svg"
+              alt="Photo"
+              width="24"
+              height="24"
+              loading="lazy"
+            /><span class="md:block hidden">Photo</span></a
+          >
+        </div>
+        <div class="pageTunerWrapper__item">
+          <a
+            href="/tiktok-story-downloader"
+            data-gtag-click="top_panel_story_click"
+            ><img
+              src="/images/story.svg"
+              alt="Story"
+              width="24"
+              height="24"
+              loading="lazy"
+            /><span class="md:block hidden">Story</span></a
+          >
+        </div>
+        <div class="pageTunerWrapper__item">
+          <a
+            href="/tiktok-sound-downloader"
+            data-gtag-click="top_panel_sound_click"
+            ><img
+              src="/images/tiktok-audio.svg"
+              alt="Sound"
+              width="24"
+              height="24"
+              loading="lazy"
+            /><span class="md:block hidden">Mp3</span></a
+          >
         </div>
       </div>
-      <div class="flex justify-center items-center mt-4 md:mt-8">
-        {
-          dynamic ? (
-            <>
-              <h2
-                class="text-2xl md:text-4xl max-w-2xl text-center font-bold tracking-tight text-black dark:text-white absolute"
-                style="line-height: 1.5"
+    </div>
+
+    <div class="relative max-w-4xl mx-auto mt-8">
+      <form class="block items-center sm:space-x-4 sm:flex sub-form">
+        <div class="relative flex-1">
+          <input
+            type="text"
+            placeholder="Paste tiktok video link here"
+            class="w-full pr-14 pl-4 outline-none rounded-md py-5 text-black placeholder-gray-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent down-url bg-[#F9E2D2]"
+            style="box-shadow: 0 0 2px rgb(255, 255, 255) !important;"
+            id="tiktok-url"
+          />
+          <button
+            class="px-8 py-[14px] bg-[#2172F6] text-xl text-white font-semibold rounded-lg shadow-lg transition-all duration-300focus:outline-none focus:ring-2 outline-none
+                    mt-10 sm:mt-0 w-full sm:w-auto send-btn cursor-pointer sm:absolute right-1 top-[50%] translate-y-[-50%]"
+            type="submit"
+            id="down-btn"
+          >
+            Download
+            <div>
+              <button
+                class="px-[2px] py-[12px] right-2 sm:right-[180px] absolute rounded-lg top-[20%] sm:top-[50%] translate-y-[-50%]"
+                style="background: linear-gradient(54.09deg, #0348dd 2.03%, #8142f5 48.63%, #ee4dd4 96.22%), linear-gradient(0deg, rgba(201, 46, 255, .15), rgba(201, 46, 255, .15))"
+                type="button"
               >
-                {t("hero.globe_title")}
-              </h2>
-              <Cobe />
-            </>
-          ) : (
-            <Image
-              class="inline-block mt-12 md:mt-20"
-              src={abstractDottedGlobeIllustration}
-              alt="Astros"
-              width={600}
-              height={600}
-              loading="eager"
-            />
-          )
-        }
+                <img src="/images/paste.webp" class="aspect-auto absolute top-[50%] translate-y-[-50%] left-[17px]" alt=""/>
+                <span
+                  class="bg-[#F2D1FD] px-8 py-[12px] text-xl rounded-lg"
+                  id="paste-btn"
+                  id="paste-btn">Paste</span
+                >
+              </button>
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="loader items-center justify-center hidden bg-orange-500">
+    <img src="/src/icons/loader.webp" alt="loader" />
+  </div>
+
+  <div class="bg-orange-500 py-16 px-4 sm:px-6 lg:px-8 main-div hidden">
+    <div class="max-w-7xl mx-auto">
+      <h2></h2>
+      <h2 class="text-2xl text-center mb-4 shadow-text msg break-all"></h2>
+      <div class="flex flex-wrap justify-center gap-8">
+        <div
+          class="gap-8 down-div grid lg:grid-cols-1 xl:grid-cols-2 grid-cols-1"
+        >
+        </div>
       </div>
     </div>
   </div>
-  <div
-    class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-  >
-    <svg
-      class="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:h-[42.375rem] animate-slide"
-      viewBox="0 0 1155 678"
-    >
-      <path
-        fill="url(#b9e4a85f-ccd5-4151-8e84-ab55c66e5aa1)"
-        fill-opacity=".3"
-        d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
-      >
-      </path>
-      <defs>
-        <linearGradient
-          id="b9e4a85f-ccd5-4151-8e84-ab55c66e5aa1"
-          x1="1155.49"
-          x2="-78.208"
-          y1=".177"
-          y2="474.645"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stop-color="#9089FC">
-            <animate
-              attributeName="stop-color"
-              values="#9089FC; #FF80B5; #9089FC"
-              dur="5s"
-              repeatCount="indefinite"></animate>
-          </stop>
-          <stop offset="1" stop-color="#ffb6c1">
-            <animate
-              attributeName="stop-color"
-              values="#ffb6c1; #9089FC; #ffb6c1"
-              dur="5s"
-              repeatCount="indefinite"></animate>
-          </stop>
-        </linearGradient>
-      </defs>
-    </svg>
-  </div>
+
+  <style>
+    .shadow-text {
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    .flex {
+      align-items: flex-start;
+    }
+  </style>
+
+  <script type="module">
+    import h from "/src/assets/js/s.js";
+
+    let submitForm;
+    let pasteBtn;
+    let mainDiv;
+    let downDiv;
+    let message;
+    let loader;
+    let e, s, r;
+    const baseURL = "https://download.stiktokio.com";
+    const errorClass = "text-[#ffffff]";
+    const simpleClass = "text-white";
+    const imageClass = "w-full h-full object-cover rounded-lg mb-6";
+    const h3Class = "text-2xl font-semibold text-white text-center mb-4";
+    const anchorClass =
+      "block w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-3 px-4 rounded-lg text-center transition-all duration-300 hover:from-pink-600 hover:to-red-600 hover:shadow-lg";
+
+    async function pasteClipBoarValue() {
+      const mainUrlInput = document.querySelector("#tiktok-url");
+      try {
+        if (!navigator.clipboard) {
+          alert("Clipboard API not supported in your browser.");
+          return;
+        }
+
+        const text = await navigator.clipboard.readText();
+
+        if (text) {
+          mainUrlInput.value = text;
+        } else {
+          return;
+        }
+      } catch (error) {
+        alert(
+          "Failed to get clipboard text. Please check your browser's clipboard permissions."
+        );
+      }
+    }
+
+    function init() {
+      pasteBtn = document.querySelector("#paste-btn");
+
+      // Reselect DOM elements
+      submitForm = document.querySelector(".sub-form");
+      mainDiv = document.querySelector(".main-div");
+      downDiv = document.querySelector(".down-div");
+      message = document.querySelector(".msg");
+      loader = document.querySelector(".loader");
+
+      // Use Submit event listener
+      submitForm.addEventListener("submit", dt);
+      pasteBtn.addEventListener("click", pasteClipBoarValue);
+
+      // Initial data fetch
+      SFR();
+    }
+
+    function addPosition(data) {
+      e = data.layout;
+      s = data.cards;
+      r = data.cards_position;
+    }
+
+    function showLoader() {
+      if (loader.classList.contains("hidden")) {
+        loader.classList.remove("hidden");
+        loader.classList.add("flex");
+      } else {
+        loader.classList.add("flex");
+      }
+    }
+
+    function hideLoader() {
+      if (loader.classList.contains("flex")) {
+        loader.classList.remove("flex");
+        loader.classList.add("hidden");
+      } else {
+        loader.classList.add("hidden");
+      }
+    }
+
+    function SFR() {
+      fetch(`${baseURL}/position`, {
+        method: "get",
+      })
+        .then((response) => response.json())
+        .then((res) => {
+          addPosition(res);
+        })
+        .catch((err) => {
+          showError(err);
+        });
+    }
+
+    function showError(errorMsg) {
+      if (mainDiv.classList.contains("hidden")) {
+        mainDiv.classList.add("flex");
+        mainDiv.classList.remove("hidden");
+      }
+      if (message.classList.contains(simpleClass)) {
+        message.classList.remove(simpleClass);
+        message.classList.add(errorClass);
+      } else {
+        message.classList.add(errorClass);
+      }
+      message.textContent = errorMsg;
+    }
+
+    function dc() {
+      if (e && s && r) {
+        const dc = h(e, r, s);
+        if (dc) {
+          return dc;
+        } else {
+          showError("Please reload page and try again later.");
+          return false;
+        }
+      } else {
+        showError("Please wait a few seconds.");
+        return false;
+      }
+    }
+
+    function showDataOnPage(data) {
+      if (data.thumbnail) {
+        showVideoDataOnPage(data);
+      } else {
+        showImageDataOnPage(data);
+      }
+    }
+
+    function scrollToElement(className) {
+      var element = document.querySelector(`.${className}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "end" });
+      } else {
+        console.log("Element not found");
+      }
+    }
+
+    function deleteAllDownloadDivs() {
+      let ddDivs = document.querySelectorAll(".ddDiv");
+
+      if (ddDivs.length >= 1) {
+        ddDivs = Array.from(ddDivs);
+        for (const element of ddDivs) {
+          element.remove();
+        }
+      }
+
+      if (!mainDiv.classList.contains("hidden")) {
+        mainDiv.classList.add("hidden");
+        mainDiv.classList.remove("flex");
+      }
+      message.textContent = "";
+    }
+
+    function showImageDataOnPage(data) {
+      mainDiv.classList.remove("hidden");
+      message.classList.add(simpleClass);
+
+      data.formats.forEach((format) => {
+        if (format.type === "image") {
+          const dnDiv = document.createElement("div");
+          dnDiv.className =
+            "bg-gray-800 rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 w-full ddDiv";
+
+          const dnButtonDiv = document.createElement("div");
+          const dnButton = document.createElement("a");
+          dnButton.className =
+            "block w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-4 rounded-lg text-center transition-colors duration-300 hover:opacity-90 my-3";
+
+          const img = document.createElement("img");
+          img.className =
+            "h-auto object-cover rounded-lg mb-6 w-full max-h-[400px]";
+          img.alt = data.title;
+          img.src = format.imgURL;
+
+          dnButton.innerText = "Download Photo";
+          dnButton.href = `${baseURL}${format.link}`;
+          dnButton.target = "_blank";
+
+          dnDiv.appendChild(img);
+          dnButtonDiv.append(dnButton);
+          dnDiv.append(dnButtonDiv);
+          downDiv.appendChild(dnDiv);
+        } else if (format.type == "audio") {
+          const dnDiv = document.createElement("div");
+          dnDiv.className = `bg-gray-800 rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 w-full ddDiv block order-2 lg:col-span-${data.formats.length - 1} md:col-span-2 col-span-1`;
+
+          const dnButton = document.createElement("a");
+          dnButton.className =
+            "block w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-4 rounded-lg text-center transition-colors duration-300 hover:opacity-90 my-3";
+
+          dnButton.innerText = "Download MP3";
+          dnButton.href = `${baseURL}${format.link}`;
+          dnButton.target = "_blank";
+
+          dnDiv.append(dnButton);
+          downDiv.appendChild(dnDiv);
+
+          const anotherButton = document.createElement("button");
+          anotherButton.className =
+            "block w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-4 rounded-lg text-center transition-colors duration-300 hover:opacity-90 my-3";
+          anotherButton.textContent = "Download Another";
+          anotherButton.addEventListener("click", () => {
+            document
+              .querySelector(".another")
+              .scrollIntoView({ behavior: "smooth" });
+          });
+
+          dnDiv.appendChild(anotherButton);
+        }
+      });
+    }
+
+    function showVideoDataOnPage(data) {
+      const dnDiv = document.createElement("div");
+      const adDiv = document.createElement("div");
+      const dnButtonDiv = document.createElement("div");
+      const thumbnail = document.createElement("img");
+      dnDiv.className =
+        "rounded-xl shadow-[0_0_3px_rgba(0,0,0,1)] overflow-hidden transform transition-all duration-300 w-full w-96 md:w-[1000px] md:flex p-4 ddDiv gap-5 col-span-2";
+      thumbnail.className =
+        "block mb-6 md:mb-0 rounded-lg md:w-[30%] md:h-[280px]";
+
+      if (mainDiv.classList.contains("hidden")) {
+        mainDiv.classList.remove("hidden");
+        mainDiv.classList.add("flex");
+      } else {
+        mainDiv.classList.add("flex");
+      }
+      if (!message.classList.contains(simpleClass)) {
+        if (message.classList.contains(errorClass)) {
+          message.classList.remove(errorClass);
+        }
+        message.classList.add(simpleClass);
+      }
+      message.textContent = data.title;
+      thumbnail.alt = data.title;
+      thumbnail.src = data.thumbnail;
+
+      downDiv.appendChild(dnDiv);
+      dnDiv.appendChild(thumbnail);
+      const adScriptContent = `
+          atOptions = {
+              'key' : '34573b90a095e95e849f42bc513a1ec8',
+              'format' : 'iframe',
+              'height' : 250,
+              'width' : 300,
+              'params' : {}
+          };
+      `;
+
+      // Create a script element for the ad options
+      const optionsScript = document.createElement('script');
+      optionsScript.type = 'text/javascript';
+      optionsScript.textContent = adScriptContent;
+
+      // Create a script element for the external script
+      const externalScript = document.createElement('script');
+      externalScript.type = 'text/javascript';
+      externalScript.src = '//lockupaccede.com/34573b90a095e95e849f42bc513a1ec8/invoke.js';
+
+      // Append the scripts to the ad div
+      adDiv.appendChild(optionsScript);
+      adDiv.appendChild(externalScript);
+
+      // Append the ad div to the parent container
+      dnDiv.appendChild(adDiv);
+      dnDiv.appendChild(dnButtonDiv);
+
+      for (let format of data.formats) {
+        const dnButton = document.createElement("a");
+        dnButton.className =
+          "block w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-4 rounded-lg text-center transition-colors duration-300 hover:opacity-90 my-3 !text-white !no-underline";
+
+        if (!format.hd && !format.watermark && format.type === "video") {
+          dnButton.innerText = "Download without watermark";
+          dnButton.href = `${baseURL}${format.link}`;
+          dnButtonDiv.append(dnButton);
+          dnButton.target = "_blank";
+        } else if (format.hd && !format.watermark && format.type === "video") {
+          dnButton.innerText = "Download without watermark (HD)";
+          dnButton.href = `${baseURL}${format.link}`;
+          dnButtonDiv.append(dnButton);
+          dnButton.target = "_blank";
+        } else if (format.hd && format.watermark && format.type === "video") {
+          dnButton.innerText = "Download watermark";
+          dnButton.href = `${baseURL}${format.link}`;
+          dnButtonDiv.append(dnButton);
+          dnButton.target = "_blank";
+        } else if (!format.hd && !format.watermark && format.type === "audio") {
+          dnButton.innerText = "Download MP3";
+          dnButton.href = `${baseURL}${format.link}`;
+          dnButtonDiv.append(dnButton);
+          dnButton.target = "_blank";
+        }
+      }
+      const anotherButton = document.createElement("button");
+      anotherButton.className =
+        "block w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-4 rounded-lg text-center transition-colors duration-300 hover:opacity-90 my-3";
+      anotherButton.textContent = "Download Another";
+      anotherButton.addEventListener("click", () => {
+        document
+          .querySelector(".another")
+          .scrollIntoView({ behavior: "smooth" });
+      });
+
+      dnButtonDiv.appendChild(anotherButton);
+
+      scrollToElement("main-div");
+    }
+    let abortController = null;
+
+    function dt(e) {
+      e.preventDefault();
+      const url = document.querySelector(".down-url").value;
+
+      const enc = dc();
+      if (!enc) {
+        scrollToElement("main-div");
+        return;
+      }
+
+      deleteAllDownloadDivs();
+      showLoader();
+
+      if (abortController) {
+        abortController.abort();
+      }
+
+      abortController = new AbortController();
+      const signal = abortController.signal;
+
+      fetch(`${baseURL}/download`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": enc,
+        },
+        body: JSON.stringify({ url: url }),
+        signal,
+      })
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.error && response.ex) {
+            window.location.reload();
+          }
+          if (response.error) {
+            showError(response.msg);
+          }
+          if (!response.error) {
+            showDataOnPage(response);
+            scrollToElement("main-div");
+          }
+        })
+        .catch((err) => {
+          if (err.name !== "AbortError") {
+            showError(err);
+          }
+        })
+        .finally(() => {
+          hideLoader();
+        });
+    }
+
+    // Clean-up function
+    function cleanup() {
+      if (submitForm) {
+        submitForm.removeEventListener("submit", dt);
+      }
+      if (pasteBtn) {
+        pasteBtn.removeEventListener("click", pasteClipBoarValue);
+      }
+    }
+
+    // Initialize on first load
+    document.addEventListener("DOMContentLoaded", init);
+
+    // Cleanup before Astro page swap
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        cleanup();
+      },
+      { once: true }
+    );
+
+    // Re-initialize after swapping pages
+    document.addEventListener("astro:after-swap", init);
+  </script>
+
 </div>
 
-<style>
-  @keyframes slide {
-    0% {
-      left: calc(50% - 70rem);
-      transform: rotate(0deg);
-    }
-    50% {
-      left: calc(50% - 30rem);
-      transform: rotate(-180deg);
-    }
-    100% {
-      left: calc(50% - 70rem);
-      transform: rotate(0deg);
-    }
-  }
 
-  .animate-slide {
-    animation: slide 25s infinite;
-  }
-</style>
+
+
