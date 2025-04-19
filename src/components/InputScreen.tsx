@@ -95,121 +95,66 @@ function InputScreen({}: Props) {
     <div>
       <Toaster />
 
-      <form class="flex flex-1 items-center justify-center p-6">
-        <label for="voice-search" class="sr-only">
-          Search
-        </label>
-        <div class="relative w-full">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
-          <input
-            x-ref="input"
-            placeholder="Insert Tiktok URL"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            required={true}
-            type="text"
-            onChange={(e) => setUrl(e.currentTarget.value)}
-            value={url()}
-          />
-
-          <button
-            aria-label="Paste"
-            onclick={async (e) => {
-              e.preventDefault();
-
-              //ask for permission to access clipboard readText
-              await navigator.permissions
-                .query({ name: "clipboard-read" as any })
-                .then((result) => {
-                  if (result.state == "granted" || result.state == "prompt") {
-                    navigator.clipboard.readText().then((text) => {
-                      setUrl(text);
-                    });
-                  }
-                });
-
-              navigator.clipboard.readText().then((text) => {
-                setUrl(text);
-              });
-            }}
-            class="absolute inset-y-0 end-0 flex items-center pe-3 dark:text-white"
-          >
-            <svg
-              class="h-6 w-6 text-red-500"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="currentColor"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+      <div
+                id="form"
+                class="text-gray-600 h-14 border-[1px] border-blue-500 shadow-md rounded-lg flex items-center my-3"
             >
-              {" "}
-              <path stroke="none" d="M0 0h24v24H0z" />{" "}
-              <rect x="8" y="8" width="12" height="12" rx="2" />{" "}
-              <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
-            </svg>
-          </button>
-        </div>
+                <input
+                    x-ref="input"
+                    placeholder="Enter Tiktok URL"
+                    class="bg-transparent text-m w-full pl-2 font-semibold h-full rounded-full text-sm focus:outline-none text-black"
+                    required={true}
+                    type="text"
+                    onChange={(e) => setUrl(e.currentTarget.value)}
+                    value={url()}
+                />
+                <button
+                    onclick={async (e) => {
+                        e.preventDefault();
 
-        <button
-          onclick={(e) => {
-            e.preventDefault();
-            if (url() == "") {
-              toast.error("Please enter a valid url or username", {
-                duration: 3000,
-                position: "bottom-center",
-                style: {
-                  "font-size": "16px",
-                },
-              });
-            } else {
-              fetchData();
-            }
-          }}
-          class="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          <svg
-            class="w-6 h-6 me-2"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            stroke="#ffffff"
-          >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              {" "}
-              <path
-                d="M12 7L12 14M12 14L15 11M12 14L9 11"
-                stroke="#ffffff"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></path>{" "}
-              <path
-                d="M16 17H12H8"
-                stroke="#ffffff"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              ></path>{" "}
-              <path
-                d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
-                stroke="#ffffff"
-                stroke-width="1.5"
-              ></path>{" "}
-            </g>
-          </svg>
-          <span class="px-1 flex items-center font-medium tracking-wide">
-            {" "}
-            Download{" "}
-          </span>
-        </button>
-      </form>
+                        //ask for permission to access clipboard readText
+                        await navigator.permissions.query({ name: 'clipboard-read' as any }).then((result) => {
+                            if (result.state == 'granted' || result.state == 'prompt') {
+                                navigator.clipboard.readText().then((text) => {
+                                    setUrl(text);
+                                });
+                            }
+                        });
+
+                        navigator.clipboard.readText().then((text) => {
+                            setUrl(text);
+                        });
+                    }}
+                    class="flex justify-center items-center p-2 border-[1px] text-xs font-semibold shadow-md mr-2 rounded-md dark:bg-blue-600 dark:text-white"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 60 58"
+                    class='fill-current dark:text-white'
+                    >
+                        <path d="M17.5 12h17c.8 0 1.5-.7 1.5-1.5V6c0-2.2-1.8-4-4-4H20c-2.2 0-4 1.8-4 4v4.5c0 .8.7 1.5 1.5 1.5z"></path>
+                        <path d="M44 6h-2.5c-.8 0-1.5.7-1.5 1.5V12c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4V7.5c0-.8-.7-1.5-1.5-1.5H8c-2.2 0-4 1.8-4 4v36c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4V10c0-2.2-1.8-4-4-4zm-6 35c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm0-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm0-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2z"></path>
+                    </svg>
+                    Paste
+                </button>
+                <button
+                    onclick={(e) => {
+                        e.preventDefault();
+                        if (url() == '') {
+                            toast.error('Please enter a valid url or username', {
+                                duration: 3000,
+                                position: 'bottom-center',
+                                style: {
+                                    'font-size': '16px',
+                                },
+                            });
+                        } else {
+                            fetchData();
+                        }
+                    }}
+                    class="mr-2 p-1 bg-blue-600 shadow-md h-10 rounded text-white"
+                >
+                    <span class="px-1 flex items-center font-medium tracking-wide"> Download </span>
+                </button>
+            </div>
 
       {loading() && (
         <div class="flex justify-center">
