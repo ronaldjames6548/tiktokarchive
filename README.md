@@ -2,22 +2,13 @@
   <img src=".github/images/astros.gif" />
 </a>
 
-# [Astros](https://astros.zank.studio)
-
-<a href="https://astro.build/">![Astro](.github/images/astro-icon.png)</a>
-<a href="https://tailwindcss.com/">![Tailwind](.github/images/tailwind-icon.png)</a>
-<a href="https://alpinejs.dev/">![Alpine js](.github/images/alpine-icon.png)</a>
-
-Astros is a template made with [Astro](https://astro.build), [Tailwind](https://tailwindcss.com/) and [AlpineJS](https://alpinejs.dev/).
-
-This project is strongly inspired by [Astroship](https://github.com/surjithctly/astroship), [Flowbite](https://flowbite.com/blocks/) and [Tailwind UI](https://tailwindui.com/components) components, make sure to check them out as well!
+# [TikTokio](https://tiktokio.sbs)
 
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/zankhq/astros)
+TikTok downloader tools are emerging in the market one after another. But not all of them are good to use. Some have a slow download speed, while others may ask people to pay. So our team has developed TikTokio. It’s a brand new TiKTok downloader that allows users to download videos from TikTok HD without any payment.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/zankhq/astros)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zankhq/astros)
+Downloading TikTok videos through TikTokio or more TikTok downloaders is important to utilize the downloaded MP3 music or videos carefully. While enjoying any content offline or through social media networks, users must show reverence to content creators' rights and follow legal and ethical standards. Here are useful tips for utilizing TikTokio sensibly and seriously.
 
 
 ### [🧪 Site preview →](https://astros.zank.studio)
@@ -223,4 +214,4 @@ npm link
 
 ---
 
-<p align="right"><a href="https://zank.studio/" target="_blank">zank.studio</p>
+<p align="right"><a href="https://tiktokio.sbs/" target="_blank">Tiktokio</p>

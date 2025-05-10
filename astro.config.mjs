@@ -10,39 +10,56 @@ import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
 import solidJs from "@astrojs/solid-js";
 
-import vercel from "@astrojs/vercel/serverless";
+import vercel from '@astrojs/vercel/serverless';
+
+export default defineConfig({
+  output: 'server',
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+  }),
+});
+
+
+
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://astros.zank.studio",
+  site: "https://tiktokio.cam",
   vite: {
     define: {
       __DATE__: `'${new Date().toISOString()}'`
     }
   },
   output: "hybrid",
-  integrations: [tailwind(), sitemap(), astroI18next(), alpinejs(), AstroPWA({
+  integrations: [
+    tailwind(), 
+    sitemap(), 
+    astroI18next(), 
+    alpinejs(),                  
+    AstroPWA({
     mode: "production",
     base: "/",
     scope: "/",
-    includeAssets: ["favicon.svg"],
+    includeAssets: ["favicon.ico"],
     registerType: "autoUpdate",
     manifest: {
-      name: "Astros - Starter Template for Astro with Tailwind CSS",
-      short_name: "Astros",
+      name: "Tiktokio - TikTok Downloader - Download TikTok Videos Without Watermark",
+      short_name: "Tikokio",
       theme_color: "#ffffff",
       icons: [{
-        src: "pwa-192x192.png",
+        src: "pwa-192x192.webp",
         sizes: "192x192",
-        type: "image/png"
+        type: "image/webp"
       }, {
-        src: "pwa-512x512.png",
+        src: "pwa-512x512.webp",
         sizes: "512x512",
-        type: "image/png"
+        type: "image/webp"
       }, {
-        src: "pwa-512x512.png",
+        src: "pwa-512x512.webp",
         sizes: "512x512",
-        type: "image/png",
+        type: "image/webp",
         purpose: "any maskable"
       }]
     },
@@ -50,6 +67,9 @@ export default defineConfig({
       navigateFallback: "/404",
       globPatterns: ["*.js"]
     },
+
+    
+
     devOptions: {
       enabled: false,
       navigateFallbackAllowlist: [/^\/404$/],
@@ -64,5 +84,6 @@ export default defineConfig({
   experimental: {
     contentCollectionCache: true
   },
+  
   adapter: vercel()
 });
