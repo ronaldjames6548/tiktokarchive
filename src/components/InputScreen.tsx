@@ -196,4 +196,48 @@ function InputScreen({}: Props) {
               
               {data() && data().result && data().result.videoWatermark && (
                 <a
-                  href={getDownloadLink
+                  href={getDownloadLink(data().result.videoWatermark, data().result.author?.nickname ?? "")}
+                  class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-center transition-colors duration-200"
+                >
+                  Download With Watermark
+                </a>
+              )}
+              
+              {data() && data().result && data().result.music && (
+                <a
+                  href={getAudioDownloadLink(data().result.music, data().result.author?.nickname ?? "")}
+                  class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-center transition-colors duration-200"
+                >
+                  Download Audio Only (MP3)
+                </a>
+              )}
+              
+              {data() && data().result && data().result.video_diyoun && (
+                <a
+                  href={getDownloadLink(data().result.video_diyoun, data().result.author?.nickname ?? "")}
+                  class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-center transition-colors duration-200"
+                >
+                  Download Diyoun HD (No Watermark)
+                </a>
+              )}
+              
+              <a 
+                href="/"
+                class="p-3 bg-green-600 hover:bg-green-700 text-white rounded-md text-center transition-colors duration-200"
+              >
+                Download Another Video
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div class="text-center text-sm text-gray-500 mt-8">
+        <p>This service uses Cloudflare Workers to proxy downloads and remove watermarks.</p>
+        <p class="mt-2">For educational purposes only. Respect copyright laws in your jurisdiction.</p>
+      </div>
+    </div>
+  );
+};
+
+export default InputScreen;
