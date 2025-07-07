@@ -10,10 +10,15 @@ export const GET: APIRoute = async ({ request }) => {
     let urlTik = params.get("url") || "";
 
     if (!urlTik) {
-      return new Response(JSON.stringify({ error: "url is required" }), {
-        status: 400,
-        headers: { "content-type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "url is required" }),
+        {
+          status: 400,
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
     }
 
     // Handle Douyin shortened URLs
@@ -22,7 +27,6 @@ export const GET: APIRoute = async ({ request }) => {
         redirect: "follow",
       });
 
-      // Get the final URL after redirection
       urlTik = res.url;
 
       if (!urlTik.includes("douyin.com/video")) {
@@ -46,16 +50,22 @@ export const GET: APIRoute = async ({ request }) => {
       }),
       {
         status: 200,
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+        },
       }
     );
   } catch (error) {
     console.error("Error fetching video:", error);
     return new Response(
-      JSON.stringify({ error: error.message || "Failed to fetch video data." }),
+      JSON.stringify({
+        error: error.message || "Failed to fetch video data.",
+      }),
       {
         status: 500,
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+        },
       }
     );
   }
