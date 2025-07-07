@@ -36,6 +36,7 @@ function InputScreen({}: Props) {
 
       if (json.status === "success") {
         setData(json);
+        loadAd();
       } else {
         throw new Error(json.error || "Failed to fetch data");
       }
@@ -104,7 +105,7 @@ function InputScreen({}: Props) {
         >
           {/* Paste Icon */}
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 60 58">
-            <path d="M17.5 12h17c.8 0 1.5-.7 1.5-1.5V6c0-2.2-1.8-4-4-4H20c-2.2 0-4 1.8-4 4v4.5c0 .8.7 1.5 1.5 1.5z"></path>
+            <path d="M17.5 12h17c.8 0 1.5-.7 1.5-1.5V6c0-2.2-1.8-4-4-4H20c-2.2 0-4 1.8-4-4v4.5c0 .8.7 1.5 1.5 1.5z"></path>
             <path d="M44 6h-2.5c-.8 0-1.5.7-1.5 1.5V12c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4V7.5c0-.8-.7-1.5-1.5-1.5H8c-2.2 0-4 1.8-4 4v36c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4V10c0-2.2-1.8-4-4-4zm-6 35c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm-6-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm0-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2z"></path>
           </svg>
         </button>
@@ -170,9 +171,7 @@ function InputScreen({}: Props) {
                   </svg>
                 </a>
               </div>
-              <h1 class="text-2xl font-bold text-center w-full mt-2">
-                {data()!.result.author.nickname}
-              </h1>
+              <h1 class="text-2xl font-bold text-center w-full mt-2">{data()!.result.author.nickname}</h1>
             </div>
           )}
 
@@ -195,41 +194,41 @@ function InputScreen({}: Props) {
           <div id="ad-banner" class="flex justify-center my-3"></div>
 
           <div class="flex flex-col justify-center gap-2 mt-2 rounded-md shadow-md my-3 w-11/12 mx-auto">
-            {data()!.result.videoSD && (
+            {data() && data().result && data().result.videoSD && (
               <a
-                href={getDownloadLink(data()!.result.videoSD, data()!.result.author?.nickname ?? "")}
+                href={getDownloadLink(data().result.videoSD, data().result.author?.nickname ?? "")}
                 class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
               >
                 Download Video Low Res (No Watermark)
               </a>
             )}
-            {data()!.result.videoHD && (
+            {data() && data().result && data().result.videoHD && (
               <a
-                href={getDownloadLink(data()!.result.videoHD, data()!.result.author?.nickname ?? "")}
+                href={getDownloadLink(data().result.videoHD, data().result.author?.nickname ?? "")}
                 class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
               >
-                Download Video HD (No Watermark)
+                Download HD (No Watermark)
               </a>
             )}
-            {data()!.result.videoWatermark && (
+            {data() && data().result && data().result.videoWatermark && (
               <a
-                href={getDownloadLink(data()!.result.videoWatermark, data()!.result.author?.nickname ?? "")}
+                href={getDownloadLink(data().result.videoWatermark, data().result.author?.nickname ?? "")}
                 class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
               >
-                Download Video With Watermark
+                Download With Watermark
               </a>
             )}
-            {data()!.result.music && (
+            {data() && data().result && data().result.music && (
               <a
-                href={getAudioDownloadLink(data()!.result.music, data()!.result.author?.nickname ?? "")}
+                href={getAudioDownloadLink(data().result.music, data().result.author?.nickname ?? "")}
                 class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
               >
                 Download Audio Only (MP3)
               </a>
             )}
-            {data()!.result.video_diyoun && (
+            {data() && data().result && data().result.video_diyoun && (
               <a
-                href={getDownloadLink(data()!.result.video_diyoun, data()!.result.author?.nickname ?? "")}
+                href={getDownloadLink(data().result.video_diyoun, data().result.author?.nickname ?? "")}
                 class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
               >
                 Download Diyoun Video HD (No Watermark)
