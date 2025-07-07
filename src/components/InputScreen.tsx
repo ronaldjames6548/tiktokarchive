@@ -1,5 +1,3 @@
-// InputScreen.tsx
-
 import { toast, Toaster } from "solid-toast";
 import { createEffect, createSignal } from "solid-js";
 
@@ -36,7 +34,6 @@ function InputScreen({}: Props) {
 
       if (json.status === "success") {
         setData(json);
-        loadAd();
       } else {
         throw new Error(json.error || "Failed to fetch data");
       }
@@ -52,23 +49,6 @@ function InputScreen({}: Props) {
     }
   };
 
-  const loadAd = () => {
-    const script1 = document.createElement("script");
-    script1.id = "aclib";
-    script1.type = "text/javascript";
-    script1.innerHTML = `
-      aclib.runBanner({
-        zoneId: '9480206',
-      });
-    `;
-    document.getElementById("ad-banner")?.appendChild(script1);
-
-    const script2 = document.createElement("script");
-    script2.type = "text/javascript";
-    script2.src = "//acscdn.com/script/aclib.js";
-    document.getElementById("ad-banner")?.appendChild(script2);
-  };
-
   const getDownloadLink = (videoUrl: string, title: string) => {
     return `https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(videoUrl)}&type=.mp4&title=${encodeURIComponent(title)}`;
   };
@@ -78,170 +58,142 @@ function InputScreen({}: Props) {
   };
 
   return (
-    <div>
+    <div class="container mx-auto px-4 py-8">
       <Toaster />
-      <div class="text-gray-600 h-14 border-[1px] border-blue-500 shadow-md rounded-lg flex items-center my-3">
-        <input
-          placeholder="Enter TikTok or Douyin URL"
-          class="bg-transparent text-m w-full pl-2 font-semibold h-full rounded-full text-sm focus:outline-none text-black"
-          type="text"
-          onChange={(e) => setUrl(e.currentTarget.value)}
-          value={url()}
-        />
-        <button
-          onClick={async (e) => {
-            e.preventDefault();
-            try {
-              const permission = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
-              if (permission.state === "granted" || permission.state === "prompt") {
-                const text = await navigator.clipboard.readText();
-                setUrl(text);
+      
+      <div class="mb-8 text-center">
+        <h1 class="text-3xl font-bold mb-2">TikTok & Douyin Video Downloader</h1>
+        <p class="text-gray-600">Download videos with no watermark, HD quality, or extract audio</p>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+        <div class="flex items-center mb-4">
+          <input
+            placeholder="Enter TikTok or Douyin URL"
+            class="flex-grow p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text"
+            onChange={(e) => setUrl(e.currentTarget.value)}
+            value={url()}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (!url().trim()) {
+                toast.error("Please enter a valid URL", {
+                  duration: 3000,
+                  position: "bottom-center",
+                  style: { "font-size": "16px" },
+                });
+              } else {
+                fetchData();
               }
-            } catch (err) {
-              console.error("Clipboard access denied", err);
-            }
-          }}
-          class="flex justify-center items-center p-2 border-[1px] text-xs font-semibold shadow-md mr-2 rounded-md dark:bg-blue-600 dark:text-white"
-        >
-          {/* Paste Icon */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 60 58">
-            <path d="M17.5 12h17c.8 0 1.5-.7 1.5-1.5V6c0-2.2-1.8-4-4-4H20c-2.2 0-4 1.8-4-4v4.5c0 .8.7 1.5 1.5 1.5z"></path>
-            <path d="M44 6h-2.5c-.8 0-1.5.7-1.5 1.5V12c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4V7.5c0-.8-.7-1.5-1.5-1.5H8c-2.2 0-4 1.8-4 4v36c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4V10c0-2.2-1.8-4-4-4zm-6 35c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm-6-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm0-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2z"></path>
-          </svg>
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            if (!url().trim()) {
-              toast.error("Please enter a valid URL", {
-                duration: 3000,
-                position: "bottom-center",
-                style: { "font-size": "16px" },
-              });
-            } else {
-              fetchData();
-            }
-          }}
-          class="mr-2 p-1 bg-blue-600 shadow-md h-10 rounded text-white"
-        >
-          <span class="px-1 flex items-center font-medium tracking-wide">Download</span>
-        </button>
+            }}
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-r-md transition-colors duration-200"
+          >
+            Download
+          </button>
+        </div>
+
+        <div class="flex justify-center space-x-4">
+          <button
+            onClick={async (e) => {
+              e.preventDefault();
+              try {
+                const permission = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
+                if (permission.state === "granted" || permission.state === "prompt") {
+                  const text = await navigator.clipboard.readText();
+                  setUrl(text);
+                }
+              } catch (err) {
+                console.error("Clipboard access denied", err);
+              }
+            }}
+            class="flex items-center justify-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Paste
+          </button>
+          
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setUrl("");
+              setData(null);
+            }}
+            class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-md transition-colors duration-200"
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
       {loading() && (
-        <div class="flex justify-center">
-          {/* Loader SVG */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="xMidYMid"
-            width="200"
-            height="200"
-            style={{ shapeRendering: "auto", display: "block", background: "transparent" }}
-          >
-            <circle cx="84" cy="50" r="10" fill="#527eff">
-              <animate attributeName="r" dur="0.25s" values="10;0" repeatCount="indefinite" />
-              <animate attributeName="fill" dur="1s" values="#527eff;#2a12ff;#6ad6f8;#50d6d2;#527eff" repeatCount="indefinite" />
-            </circle>
-            <circle cx="16" cy="50" r="10" fill="#527eff">
-              <animate attributeName="r" dur="1s" values="0;0;10;10;10" repeatCount="indefinite" />
-              <animate attributeName="cx" dur="1s" values="16;16;16;50;84" repeatCount="indefinite" />
-            </circle>
-          </svg>
+        <div class="flex justify-center my-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       )}
 
       {data() && (
-        <div class="mt-2">
-          {data()!.result.author && (
-            <div class="flex justify-center flex-wrap">
-              <div class="relative">
-                <img
-                  crossorigin="anonymous"
-                  class="rounded-full h-32 w-32"
-                  src={data()!.result.author.avatar ?? ""}
-                  alt={data()!.result.author.nickname ?? ""}
-                />
-                <a
-                  class="absolute bottom-0 right-0"
-                  href={getDownloadLink(data()!.result.author.avatar ?? "", data()!.result.author.nickname ?? "")}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M7 17h10v-2H7zm5-3l4-4l-1.4-1.4l-1.6 1.55V6h-2v4.15L9.4 8.6L8 10zm0 8q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22" />
-                  </svg>
-                </a>
-              </div>
-              <h1 class="text-2xl font-bold text-center w-full mt-2">{data()!.result.author.nickname}</h1>
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-center mb-6">
+              {data()!.result.author && (
+                <>
+                  <img
+                    crossorigin="anonymous"
+                    class="rounded-full h-24 w-24 mb-4 md:mb-0 md:mr-6"
+                    src={data()!.result.author.avatar ?? ""}
+                    alt={data()!.result.author.nickname ?? ""}
+                  />
+                  <div class="text-center md:text-left">
+                    <h2 class="text-xl font-bold">{data()!.result.author.nickname}</h2>
+                    <p class="text-gray-600 mt-2">{data()!.result.desc}</p>
+                  </div>
+                </>
+              )}
             </div>
-          )}
 
-          <div>
-            <video
-              controls
-              src={
-                data()!.result.videoSD ??
-                data()!.result.videoHD ??
-                data()!.result.videoWatermark ??
-                data()!.result.video_diyoun ??
-                data()!.result.music ??
-                ""
-              }
-              class="rounded-md shadow-md my-3 w-3/4 mx-auto"
-            ></video>
-            <p class="text-center text-lg font-semibold mx-auto">{data()!.result.desc}</p>
+            <div class="mt-6">
+              <video
+                controls
+                src={
+                  data()!.result.videoSD ??
+                  data()!.result.videoHD ??
+                  data()!.result.videoWatermark ??
+                  data()!.result.video_diyoun ??
+                  data()!.result.music ??
+                  ""
+                }
+                class="w-full rounded-md shadow-md my-3"
+              ></video>
+            </div>
           </div>
 
-          <div id="ad-banner" class="flex justify-center my-3"></div>
-
-          <div class="flex flex-col justify-center gap-2 mt-2 rounded-md shadow-md my-3 w-11/12 mx-auto">
-            {data() && data().result && data().result.videoSD && (
-              <a
-                href={getDownloadLink(data().result.videoSD, data().result.author?.nickname ?? "")}
-                class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
-              >
-                Download Video Low Res (No Watermark)
-              </a>
-            )}
-            {data() && data().result && data().result.videoHD && (
-              <a
-                href={getDownloadLink(data().result.videoHD, data().result.author?.nickname ?? "")}
-                class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
-              >
-                Download HD (No Watermark)
-              </a>
-            )}
-            {data() && data().result && data().result.videoWatermark && (
-              <a
-                href={getDownloadLink(data().result.videoWatermark, data().result.author?.nickname ?? "")}
-                class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
-              >
-                Download With Watermark
-              </a>
-            )}
-            {data() && data().result && data().result.music && (
-              <a
-                href={getAudioDownloadLink(data().result.music, data().result.author?.nickname ?? "")}
-                class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
-              >
-                Download Audio Only (MP3)
-              </a>
-            )}
-            {data() && data().result && data().result.video_diyoun && (
-              <a
-                href={getDownloadLink(data().result.video_diyoun, data().result.author?.nickname ?? "")}
-                class="p-2 bg-blue-600 shadow-md h-10 rounded text-white"
-              >
-                Download Diyoun Video HD (No Watermark)
-              </a>
-            )}
-            <a class="p-2 bg-blue-600 shadow-md h-10 rounded text-white" href="/">
-              Download Another Video
-            </a>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default InputScreen;
+          <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h3 class="text-xl font-semibold mb-4 text-center">Download Options</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {data() && data().result && data().result.videoSD && (
+                <a
+                  href={getDownloadLink(data().result.videoSD, data().result.author?.nickname ?? "")}
+                  class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-center transition-colors duration-200"
+                >
+                  Download Low Res (No Watermark)
+                </a>
+              )}
+              
+              {data() && data().result && data().result.videoHD && (
+                <a
+                  href={getDownloadLink(data().result.videoHD, data().result.author?.nickname ?? "")}
+                  class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-center transition-colors duration-200"
+                >
+                  Download HD (No Watermark)
+                </a>
+              )}
+              
+              {data() && data().result && data().result.videoWatermark && (
+                <a
+                  href={getDownloadLink
