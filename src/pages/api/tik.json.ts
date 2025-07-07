@@ -10,65 +10,52 @@ export const GET: APIRoute = async ({ request }) => {
     let urlTik = params.get("url") || "";
 
     if (!urlTik) {
-      return new Response(
-        JSON.stringify({ error: "url is required" }),
-        {
-          status: 400,
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
+      return new Response(JSON.stringify({ error: "url is required" }), {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      });
     }
 
-    // Handle Douyin short links by expanding them
+    // Handle Douyin shortened URLs
     if (urlTik.includes("v.douyin.com")) {
       const res = await fetch(urlTik, {
         redirect: "follow",
       });
 
-      // Get final URL after redirection
+      // Get the final URL after redirection
       urlTik = res.url;
 
-      // Ensure it's a valid Douyin link
       if (!urlTik.includes("douyin.com/video")) {
-        throw new Error("The provided Douyin link is not a valid video URL.");
+        throw new Error("Invalid Douyin video URL");
       }
     }
 
-    // Use Downloader directly for TikTok or Douyin URLs
+    // Download TikTok/Douyin video metadata
     const data = await Downloader(urlTik, {
       version: "v3",
     });
 
-    // Return full response with optional Douyin-specific fields
+    // Return response with safe defaults
     return new Response(
       JSON.stringify({
         ...data,
         result: {
-          ...data.result,
-          video_diyoun: data.result.video_diyoun || null,
+          ...(data.result || {}),
+          video_diyoun: data.result?.video_diyoun || null,
         },
       }),
       {
         status: 200,
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       }
     );
   } catch (error) {
-    console.error(error);
-
+    console.error("Error fetching video:", error);
     return new Response(
-      JSON.stringify({
-        error: error.message || "Failed to fetch video data.",
-      }),
+      JSON.stringify({ error: error.message || "Failed to fetch video data." }),
       {
         status: 500,
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       }
     );
   }
