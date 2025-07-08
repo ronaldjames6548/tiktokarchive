@@ -41,51 +41,52 @@ function InputScreen() {
     return input.trim();
   };
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      let finalUrl = url();
-      
-      // Special handling for Douyin URLs
-      if (/douyin\.com/.test(finalUrl) || /复制此链接|打开Dou音搜索/.test(finalUrl)) {
-        setProcessingShareText(true);
-        finalUrl = cleanInputUrl(finalUrl);
-        
-        if (!finalUrl) {
-          throw new Error("Couldn't extract valid Douyin URL. Please try copying the link directly from the share menu.");
-        }
-      }
-
-      const res = await fetch(`/api/tik.json?url=${encodeURIComponent(finalUrl)}`);
-      
-      if (!res.ok) {
-        throw new Error(`Server returned ${res.status}: ${res.statusText}`);
-      }
-
-      const json = await res.json();
-
-      if (json.status === "success") {
-        setData(json);
-        loadAd();
-      } else {
-        throw new Error(json.error || "Failed to fetch video data");
-      }
-    } catch (err: any) {
-      toast.error(err.message, {
-        duration: 5000,
-        position: "bottom-center",
-        style: { 
-          "font-size": "16px", 
-          "white-space": "pre-line",
-          "max-width": "90vw"
-        },
-      });
-      setData(null);
-    } finally {
-      setLoading(false);
-      setProcessingShareText(false);
+ const fetchData = async () => {
+  setLoading(true);
+  try {
+    let finalUrl = url();
+    
+    // Special handling for Chinese characters in Douyin URLs
+    if (/[\u4e00-\u9fa5]/.test(finalUrl) || /douyin\.com/.test(finalUrl)) {
+      setProcessingShareText(true);
+      finalUrl = encodeURI(decodeURI(finalUrl));
     }
-  };
+
+    const res = await fetch(`/api/tik.json?url=${encodeURIComponent(finalUrl)}`);
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.error || 
+        errorData.message || 
+        `Server returned ${res.status}`
+      );
+    }
+
+    const json = await res.json();
+    
+    if (json.status === "success") {
+      setData(json);
+      loadAd();
+    } else {
+      throw new Error(json.error || "Failed to fetch video data");
+    }
+  } catch (err: any) {
+    toast.error(err.message, {
+      duration: 5000,
+      position: "bottom-center",
+      style: { 
+        "font-size": "16px", 
+        "white-space": "pre-line",
+        "max-width": "90vw"
+      },
+    });
+    setData(null);
+  } finally {
+    setLoading(false);
+    setProcessingShareText(false);
+  }
+};
 
   return (
     <div>
