@@ -88,11 +88,11 @@ function InputScreen() {
   };
 
   const getDownloadLink = (videoUrl: string, title: string) => {
-    return `https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(videoUrl)}&type=.mp4&title=${encodeURIComponent(title || 'video')}`;
+    return `https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(videoUrl)}&type=.mp4&title=${encodeURIComponent(title || 'video')}`;
   };
 
   const getAudioDownloadLink = (audioUrl: string, title: string) => {
-    return `https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(audioUrl)}&type=.mp3&title=${encodeURIComponent(title || 'audio')}`;
+    return `https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(audioUrl)}&type=.mp3&title=${encodeURIComponent(title || 'audio')}`;
   };
 
   const getDownloadButtonText = (platform: Platform | undefined, quality: string) => {
