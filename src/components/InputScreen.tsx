@@ -41,12 +41,14 @@ function InputScreen() {
     try {
       let finalUrl = url();
 
+          console.log("Raw user input:", finalUrl);
+
+
       if (/复制此链接|打开Dou音搜索/.test(finalUrl)) {
         setProcessingShareText(true);
         finalUrl = cleanInputUrl(finalUrl);
       }
-
-      console.log("Final cleaned URL:", finalUrl);
+    console.log("Final cleaned URL sent to backend:", finalUrl); 
 
       const res = await fetch(`/api/tik.json?url=${encodeURIComponent(finalUrl)}`);
       const json = await res.json();
