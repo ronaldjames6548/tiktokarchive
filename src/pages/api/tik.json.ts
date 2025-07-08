@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-
 export const GET: APIRoute = async ({ url }) => {
   const videoUrl = url.searchParams.get("url");
 
