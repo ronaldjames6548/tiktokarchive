@@ -1,67 +1,62 @@
 import type { APIRoute } from "astro";
-export const GET: APIRoute = async ({ url }) => {
-  const videoUrl = url.searchParams.get("url");
+import { Downloader } from "@tobyg74/tiktok-api-dl";
 
-  if (!videoUrl) {
-    return new Response(
-      JSON.stringify({ status: "error", error: "URL is required" }),
-      { status: 400 }
-    );
+export const prerender = false;
+
+// Enhanced URL extractor for Douyin share text
+function extractVideoUrl(input: string): string | null {
+  // First try to find standard URL patterns
+  const standardUrl = input.match(/https?:\/\/[^\s]+/)?.[0];
+  if (standardUrl && /(tiktok|douyin)\.com/.test(standardUrl)) {
+    return standardUrl;
   }
 
-  try {
-    const origin = url.origin;
-    const apiUrl = `${origin}/api/tiktok-api-dl?url=${encodeURIComponent(videoUrl)}`;
+  // Special handling for Douyin share text
+  const douyinShareMatch = input.match(/https?:\/\/v\.douyin\.com\/\S+/);
+  return douyinShareMatch ? douyinShareMatch[0] : null;
+}
 
-    const apiRes = await fetch(apiUrl);
-    if (!apiRes.ok) {
-      const errorBody = await apiRes.text();
+export const GET: APIRoute = async ({ request }) => {
+  try {
+    const url = new URL(request.url);
+    const rawUrl = url.searchParams.get("url") || "";
+    
+    // Extract clean URL from possible share text
+    const videoUrl = extractVideoUrl(rawUrl);
+    if (!videoUrl) {
       return new Response(
-        JSON.stringify({
-          status: "error",
-          error: `API call failed: ${errorBody || apiRes.statusText}`,
+        JSON.stringify({ 
+          error: "Invalid URL format. Please ensure you're using a valid TikTok or Douyin link",
+          details: "For Douyin, try copying the link directly from the share menu"
         }),
-        { status: 500 }
+        { status: 400 }
       );
     }
 
-    const json = await apiRes.json();
-    if (json.status !== "success") {
-      return new Response(JSON.stringify(json), { status: 400 });
-    }
+    // Process through Cloudflare Worker
+    const workerUrl = `https://dl.tiktokiocdn.workers.dev/api/process?url=${encodeURIComponent(videoUrl)}`;
+    const response = await fetch(workerUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': videoUrl.includes('douyin') ? 'https://www.douyin.com/' : 'https://www.tiktok.com/'
+      }
+    });
 
-    const result = json.result;
+    if (!response.ok) throw new Error(`Worker failed with status ${response.status}`);
 
-    const wrap = (mediaUrl: string | null, type: string) =>
-      mediaUrl
-        ? `https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(
-            mediaUrl
-          )}&type=${type}&title=${encodeURIComponent(result.desc || "video")}`
-        : null;
+    return new Response(await response.text(), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
 
+  } catch (error) {
+    console.error('API Error:', error);
     return new Response(
-      JSON.stringify({
-        status: "success",
-        platform: /douyin/.test(videoUrl) ? "douyin" : "tiktok",
-        result: {
-          ...result,
-          videoHD: wrap(result.videoHD, ".mp4"),
-          videoSD: wrap(result.videoSD, ".mp4"),
-          videoWatermark: wrap(result.videoWatermark, ".mp4"),
-          music: wrap(result.music, ".mp3"),
-          video_diyoun:
-            wrap(result.videoHD, ".mp4") || wrap(result.videoSD, ".mp4"),
-        },
-      }),
-      { status: 200 }
-    );
-  } catch (err: any) {
-    return new Response(
-      JSON.stringify({
-        status: "error",
-        error:
-          err?.message ||
-          "Failed to fetch video. Possibly region-locked or unsupported URL.",
+      JSON.stringify({ 
+        error: error.message,
+        solution: videoUrl.includes('douyin') 
+          ? "Douyin videos may require additional headers. Try again or use VPN for Chinese content."
+          : "Please check the URL and try again"
       }),
       { status: 500 }
     );
