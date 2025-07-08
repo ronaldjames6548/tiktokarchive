@@ -1,5 +1,5 @@
 import { toast, Toaster } from "solid-toast";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 
 type Platform = 'tiktok' | 'douyin' | 'unknown';
 
@@ -28,11 +28,16 @@ function InputScreen() {
   const [loading, setLoading] = createSignal(false);
   const [processingShareText, setProcessingShareText] = createSignal(false);
 
+  // Enhanced URL cleaner that handles all Douyin formats
   const cleanInputUrl = (input: string): string => {
-    if (/复制此链接|打开Dou音搜索/.test(input)) {
-      const urlMatch = input.match(/https?:\/\/v\.douyin\.com\/[a-zA-Z0-9]+\/?/);
-      return urlMatch ? urlMatch[0] : input;
-    }
+    // Handle Douyin share text format
+    const shareTextMatch = input.match(/https?:\/\/v\.douyin\.com\/[a-zA-Z0-9]+\/?/);
+    if (shareTextMatch) return shareTextMatch[0];
+    
+    // Handle full Douyin video URLs
+    const videoUrlMatch = input.match(/https?:\/\/(www\.)?(douyin|iesdouyin)\.com\/(video|share\/video)\/\d+/);
+    if (videoUrlMatch) return videoUrlMatch[0];
+    
     return input.trim();
   };
 
@@ -40,17 +45,23 @@ function InputScreen() {
     setLoading(true);
     try {
       let finalUrl = url();
-
-          console.log("Raw user input:", finalUrl);
-
-
-      if (/复制此链接|打开Dou音搜索/.test(finalUrl)) {
+      
+      // Special handling for Douyin URLs
+      if (/douyin\.com/.test(finalUrl) || /复制此链接|打开Dou音搜索/.test(finalUrl)) {
         setProcessingShareText(true);
         finalUrl = cleanInputUrl(finalUrl);
+        
+        if (!finalUrl) {
+          throw new Error("Couldn't extract valid Douyin URL. Please try copying the link directly from the share menu.");
+        }
       }
-    console.log("Final cleaned URL sent to backend:", finalUrl); 
 
       const res = await fetch(`/api/tik.json?url=${encodeURIComponent(finalUrl)}`);
+      
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+      }
+
       const json = await res.json();
 
       if (json.status === "success") {
@@ -61,9 +72,13 @@ function InputScreen() {
       }
     } catch (err: any) {
       toast.error(err.message, {
-        duration: 4000,
+        duration: 5000,
         position: "bottom-center",
-        style: { "font-size": "16px", "white-space": "pre-line", "max-width": "90vw" },
+        style: { 
+          "font-size": "16px", 
+          "white-space": "pre-line",
+          "max-width": "90vw"
+        },
       });
       setData(null);
     } finally {
@@ -71,29 +86,6 @@ function InputScreen() {
       setProcessingShareText(false);
     }
   };
-
-  const loadAd = () => {
-    const script1 = document.createElement("script");
-    script1.id = "aclib";
-    script1.type = "text/javascript";
-    script1.innerHTML = `aclib.runBanner({ zoneId: '9480206' });`;
-    document.getElementById("ad-banner")?.appendChild(script1);
-
-    const script2 = document.createElement("script");
-    script2.type = "text/javascript";
-    script2.src = "//acscdn.com/script/aclib.js";
-    document.getElementById("ad-banner")?.appendChild(script2);
-  };
-
-  const getDownloadLink = (videoUrl: string, title: string) =>
-    `https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(videoUrl)}&type=.mp4&title=${encodeURIComponent(title || 'video')}`;
-
-  const getAudioDownloadLink = (audioUrl: string, title: string) =>
-    `https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(audioUrl)}&type=.mp3&title=${encodeURIComponent(title || 'audio')}`;
-
-  const getDownloadButtonText = (platform: Platform | undefined, quality: string) =>
-    platform === 'douyin' ? `Download Douyin Video (${quality})` : `Download TikTok Video (${quality})`;
-
 
   return (
     <div>
@@ -104,6 +96,18 @@ function InputScreen() {
           class="bg-transparent text-m w-full pl-2 font-semibold h-full rounded-full text-sm focus:outline-none text-black"
           type="text"
           onChange={(e) => setUrl(e.currentTarget.value)}
+          onPaste={async (e) => {
+            try {
+              const text = await navigator.clipboard.readText();
+              setUrl(text);
+              // Auto-trigger download if it looks like a Douyin share text
+              if (/复制此链接|打开Dou音搜索|douyin\.com/.test(text)) {
+                fetchData();
+              }
+            } catch (err) {
+              toast.error("Couldn't access clipboard. Please paste manually.");
+            }
+          }}
           value={url()}
         />
         <button
